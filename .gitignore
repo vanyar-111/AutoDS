@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Models & Reports (large files)
+models/*.pkl
+models/*.joblib
+reports/*.html
+reports/*.pdf
+
+# Images generated during runs
+images/*.png
+images/*.jpg
+
+# Datasets (keep samples, ignore large uploads)
+datasets/*.csv
+!datasets/sample_*.csv
