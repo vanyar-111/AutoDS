@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoDS - Automated Data Science Pipeline</title>
+    <meta name="description" content="End-to-end automated ML pipeline with profiling, cleaning, training, tuning, and explainability.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-title">AutoDS</div>
+        <div class="sidebar-subtitle">Automated Data Science</div>
+
+        <ul class="pipeline-steps" id="pipeline-steps">
+            <li class="pipeline-step active" data-step="0"><span class="marker"></span>Upload Dataset</li>
+            <li class="pipeline-step" data-step="1"><span class="marker"></span>Dataset Profile</li>
+            <li class="pipeline-step" data-step="2"><span class="marker"></span>Cleaning</li>
+            <li class="pipeline-step" data-step="3"><span class="marker"></span>Feature Engineering</li>
+            <li class="pipeline-step" data-step="4"><span class="marker"></span>Model Training</li>
+            <li class="pipeline-step" data-step="5"><span class="marker"></span>Hyperparameter Tuning</li>
+            <li class="pipeline-step" data-step="6"><span class="marker"></span>Model Comparison</li>
+            <li class="pipeline-step" data-step="7"><span class="marker"></span>Explainability</li>
+            <li class="pipeline-step" data-step="8"><span class="marker"></span>Report</li>
+        </ul>
+
+        <div class="sidebar-info hidden" id="sidebar-info">
+            <div><strong>File:</strong> <span id="sidebar-filename">--</span></div>
+            <div style="margin-top:4px"><strong>Shape:</strong> <span id="sidebar-shape">--</span></div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <h1 class="page-title">AutoDS</h1>
+        <p class="page-desc">Upload a CSV to run automated profiling, cleaning, training, tuning, explainability, and report generation.</p>
+
+        <!-- Upload Section -->
+        <div class="section" id="section-upload">
+            <h2 class="section-title">Upload Dataset</h2>
+
+            <div class="upload-area" id="upload-area">
+                <p class="upload-label">Drop a .csv file here or click to browse</p>
+                <p>Supports any tabular dataset with a target column</p>
+                <input type="file" id="file-input" accept=".csv">
+            </div>
+
+            <div id="upload-error" class="alert alert-error hidden" style="margin-top:12px"></div>
+        </div>
+
+        <!-- Upload Result -->
+        <div class="section hidden" id="section-upload-result">
+            <div id="upload-success" class="alert alert-success"></div>
+            <div class="metrics" id="upload-metrics"></div>
+
+            <h2 class="section-title">Preview</h2>
+            <div class="table-wrap" id="preview-table-wrap">
+                <table id="preview-table"></table>
+            </div>
+        </div>
+
+        <!-- Profiler Section -->
+        <div class="section hidden" id="section-profiler">
+            <h2 class="section-title">Dataset Profile</h2>
+
+            <div class="form-group">
+                <label for="target-select">Target Column</label>
+                <select id="target-select" class="form-select"></select>
+            </div>
+
+            <button class="btn btn-primary" id="btn-profile">Run Profiler</button>
+        </div>
+
+        <!-- Profile Results -->
+        <div class="section hidden" id="section-profile-results">
+
+            <div style="margin-bottom:14px">
+                <span class="badge" id="task-badge"></span>
+                <span style="margin-left:8px; font-size:0.8rem; color:var(--text-muted)">
+                    Target: <strong id="target-name"></strong>
+                </span>
+            </div>
+
+            <div class="metrics" id="profile-metrics"></div>
+
+            <!-- Tabs -->
+            <div class="tabs" id="profile-tabs">
+                <button class="tab-btn active" data-tab="tab-missing">Missing Values</button>
+                <button class="tab-btn" data-tab="tab-types">Data Types</button>
+                <button class="tab-btn" data-tab="tab-stats">Statistics</button>
+                <button class="tab-btn" data-tab="tab-corr">Correlations</button>
+                <button class="tab-btn" data-tab="tab-balance">Class Balance</button>
+            </div>
+
+            <!-- Tab: Missing -->
+            <div class="tab-panel active" id="tab-missing"></div>
+
+            <!-- Tab: Types -->
+            <div class="tab-panel" id="tab-types"></div>
+
+            <!-- Tab: Stats -->
+            <div class="tab-panel" id="tab-stats"></div>
+
+            <!-- Tab: Correlations -->
+            <div class="tab-panel" id="tab-corr"></div>
+
+            <!-- Tab: Class Balance -->
+            <div class="tab-panel" id="tab-balance"></div>
+
+            <div class="alert alert-success" style="margin-top:20px">
+                Profiling complete. Proceed to the Cleaning step next.
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,489 @@
+/* ── Reset & Base ── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #111113;
+    --surface: #19191d;
+    --surface-2: #222228;
+    --border: #2a2a32;
+    --text: #e0e0e6;
+    --text-muted: #888893;
+    --accent: #6c72cb;
+    --accent-light: #8b8fd9;
+    --green: #4caf82;
+    --red: #d9534f;
+    --yellow: #e0a83c;
+    --blue: #5b9bd5;
+    --radius: 6px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+a { color: var(--accent-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Layout ── */
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 16px;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.main {
+    margin-left: 220px;
+    flex: 1;
+    padding: 28px 36px;
+    max-width: 1100px;
+}
+
+/* ── Sidebar ── */
+.sidebar-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.sidebar-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.pipeline-steps {
+    list-style: none;
+}
+
+.pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    margin-bottom: 2px;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: background 0.15s;
+}
+
+.pipeline-step .marker {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.pipeline-step.active {
+    background: rgba(108, 114, 203, 0.1);
+    color: var(--accent-light);
+}
+
+.pipeline-step.active .marker {
+    background: var(--accent);
+}
+
+.pipeline-step.done {
+    color: var(--green);
+}
+
+.pipeline-step.done .marker {
+    background: var(--green);
+}
+
+.sidebar-info {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.sidebar-info strong {
+    color: var(--text);
+}
+
+/* ── Page Header ── */
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.page-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+/* ── Section ── */
+.section {
+    margin-bottom: 28px;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* ── Upload Area ── */
+.upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-area:hover, .upload-area.drag-over {
+    border-color: var(--accent);
+    background: rgba(108, 114, 203, 0.04);
+}
+
+.upload-area p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.upload-area .upload-label {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.upload-area input[type="file"] {
+    display: none;
+}
+
+/* ── Metrics Row ── */
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+}
+
+.metric-card .label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.metric-card .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+/* ── Tables ── */
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: var(--surface-2);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    position: sticky;
+    top: 0;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: rgba(108, 114, 203, 0.04);
+}
+
+/* ── Tabs ── */
+.tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    font-family: var(--font);
+}
+
+.tab-btn:hover {
+    color: var(--text);
+}
+
+.tab-btn.active {
+    color: var(--accent-light);
+    border-bottom-color: var(--accent);
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* ── Badges ── */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.badge-classification {
+    background: rgba(76, 175, 130, 0.12);
+    color: var(--green);
+    border: 1px solid rgba(76, 175, 130, 0.25);
+}
+
+.badge-regression {
+    background: rgba(91, 155, 213, 0.12);
+    color: var(--blue);
+    border: 1px solid rgba(91, 155, 213, 0.25);
+}
+
+/* ── Buttons ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--accent-light);
+}
+
+/* ── Alerts ── */
+.alert {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+}
+
+.alert-success {
+    background: rgba(76, 175, 130, 0.1);
+    border: 1px solid rgba(76, 175, 130, 0.2);
+    color: var(--green);
+}
+
+.alert-warning {
+    background: rgba(224, 168, 60, 0.1);
+    border: 1px solid rgba(224, 168, 60, 0.2);
+    color: var(--yellow);
+}
+
+.alert-error {
+    background: rgba(217, 83, 79, 0.1);
+    border: 1px solid rgba(217, 83, 79, 0.2);
+    color: var(--red);
+}
+
+.alert-info {
+    background: rgba(91, 155, 213, 0.1);
+    border: 1px solid rgba(91, 155, 213, 0.2);
+    color: var(--blue);
+}
+
+/* ── Select ── */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-select {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 0.8rem;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* ── Bar chart (pure CSS) ── */
+.bar-chart {
+    margin-top: 10px;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.bar-label {
+    width: 120px;
+    font-size: 0.75rem;
+    text-align: right;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.bar-track {
+    flex: 1;
+    height: 18px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.bar-value {
+    width: 50px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ── Correlation grid ── */
+.corr-grid {
+    overflow-x: auto;
+}
+
+.corr-grid table th,
+.corr-grid table td {
+    text-align: center;
+    padding: 6px 8px;
+    font-size: 0.7rem;
+    min-width: 55px;
+}
+
+/* ── Loading spinner ── */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Hidden ── */
+.hidden {
+    display: none !important;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 16px; }
+}
