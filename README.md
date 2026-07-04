@@ -25,7 +25,7 @@ CSV Upload → Dataset Profiler → Cleaning → Feature Engineering
 | Report Generation     | Jinja2 + WeasyPrint             |
 | Model Saving          | Joblib                          |
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```bash
 # 1. Create virtual environment
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 AutoDS/
@@ -62,7 +62,7 @@ AutoDS/
 └── README.md
 ```
 
-## 📌 Status
+##  Status
 
 - [x] CSV Upload
 - [x] Dataset Profiling
