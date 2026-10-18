@@ -37,98 +37,21 @@ body {
 a { color: var(--accent-light); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+
 /* ── Layout ── */
 .app {
     display: flex;
     min-height: 100vh;
-}
-
-.sidebar {
-    width: 220px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 20px 16px;
-    flex-shrink: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    overflow-y: auto;
+    width: 100%;
 }
 
 .main {
-    margin-left: 220px;
     flex: 1;
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
     padding: 28px 36px;
-    max-width: 1100px;
-}
-
-/* ── Sidebar ── */
-.sidebar-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 2px;
-}
-
-.sidebar-subtitle {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-}
-
-.pipeline-steps {
-    list-style: none;
-}
-
-.pipeline-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    margin-bottom: 2px;
-    border-radius: var(--radius);
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    transition: background 0.15s;
-}
-
-.pipeline-step .marker {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--border);
-    flex-shrink: 0;
-}
-
-.pipeline-step.active {
-    background: rgba(108, 114, 203, 0.1);
-    color: var(--accent-light);
-}
-
-.pipeline-step.active .marker {
-    background: var(--accent);
-}
-
-.pipeline-step.done {
-    color: var(--green);
-}
-
-.pipeline-step.done .marker {
-    background: var(--green);
-}
-
-.sidebar-info {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.sidebar-info strong {
-    color: var(--text);
+    max-width: none;
 }
 
 /* ── Page Header ── */
@@ -484,6 +407,5 @@ tr:hover td {
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-    .sidebar { display: none; }
-    .main { margin-left: 0; padding: 16px; }
+    .main { padding: 16px; }
 }

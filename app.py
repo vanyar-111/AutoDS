@@ -9,6 +9,13 @@ import traceback
 from flask import Flask, render_template, request, jsonify, session
 import pandas as pd
 import numpy as np
+from io import BytesIO
+from flask import send_file
+from backend.cleaner import clean_dataset
+from io import BytesIO
+from flask import send_file
+from backend.reportgen import generate_html_report
+from backend.anomalydet import detect_anomalies
 
 from backend.profiler import profile_dataset, get_missing_summary, get_type_summary
 
@@ -20,6 +27,10 @@ store = {
     "df": None,
     "profile": None,
     "filename": None,
+    "cleaned_df": None,
+    "cleaning_summary": None,
+    "report_html": None,
+    "anomaly_results": None,
 }
 
 
@@ -64,8 +75,12 @@ def upload_csv():
     try:
         df = pd.read_csv(file)
         store["df"] = df
+        store["cleaned_df"] = None
+        store["cleaning_summary"] = None
         store["filename"] = file.filename
         store["profile"] = None
+        store["report_html"] = None
+        store["anomaly_results"] = None
 
         return jsonify({
             "filename": file.filename,
@@ -167,6 +182,189 @@ def get_distribution(column):
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/clean", methods=["POST"])
+def clean_uploaded_dataset():
+    if store["df"] is None:
+        return jsonify({
+            "error": "Upload a CSV before cleaning."
+        }), 400
+
+    data = request.get_json(silent=True) or {}
+
+    strategy = data.get("missing_strategy", "auto")
+    remove_duplicates = data.get("remove_duplicates", True)
+
+    if not isinstance(remove_duplicates, bool):
+        return jsonify({
+            "error": "remove_duplicates must be true or false."
+        }), 400
+
+    try:
+        cleaned_df, summary = clean_dataset(
+            store["df"],
+            missing_strategy=strategy,
+            remove_duplicates=remove_duplicates,
+        )
+
+        store["cleaned_df"] = cleaned_df
+        store["cleaning_summary"] = summary
+
+        return jsonify({
+            "message": "Cleaning completed successfully.",
+            "summary": summary,
+            "preview": cleaned_df.head(10).fillna("").to_dict(
+                orient="records"
+            ),
+            "columns": cleaned_df.columns.tolist(),
+        })
+
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception:
+        traceback.print_exc()
+        return jsonify({
+            "error": "An unexpected error occurred during cleaning."
+        }), 500
+
+
+@app.route("/api/download-cleaned", methods=["GET"])
+def download_cleaned_dataset():
+    cleaned_df = store["cleaned_df"]
+
+    if cleaned_df is None:
+        return jsonify({
+            "error": "Run cleaning before downloading."
+        }), 400
+
+    try:
+        csv_data = cleaned_df.to_csv(index=False).encode("utf-8")
+
+        return send_file(
+            BytesIO(csv_data),
+            mimetype="text/csv",
+            as_attachment=True,
+            download_name="cleaned_dataset.csv",
+        )
+    except Exception:
+        traceback.print_exc()
+        return jsonify({
+            "error": "Could not generate the cleaned CSV."
+        }), 500
+
+
+# ── API: Generate HTML Report ──
+
+@app.route("/api/report", methods=["POST"])
+def generate_report():
+    if store["df"] is None:
+        return jsonify({
+            "error": "Upload a dataset before generating a report."
+        }), 400
+
+    try:
+        # Report on the cleaned dataset if cleaning has run;
+        # otherwise, report on the original dataset.
+        report_df = (
+            store["cleaned_df"]
+            if store["cleaned_df"] is not None
+            else store["df"]
+        )
+
+        html_report = generate_html_report(
+            report_df,
+            filename=store["filename"] or "dataset.csv",
+            profile=store["profile"],
+            cleaning_summary=store["cleaning_summary"],
+            anomaly_results=store["anomaly_results"],
+        )
+
+        store["report_html"] = html_report
+
+        return jsonify({
+            "message": "Report generated successfully.",
+            "filename": "autods_report.html",
+            "rows": int(report_df.shape[0]),
+            "columns": int(report_df.shape[1]),
+        })
+
+    except Exception:
+        traceback.print_exc()
+        return jsonify({
+            "error": "Could not generate the report."
+        }), 500
+
+
+# ── API: Download HTML Report ──
+
+@app.route("/api/download-report", methods=["GET"])
+def download_report():
+    html_report = store["report_html"]
+
+    if html_report is None:
+        return jsonify({
+            "error": "Generate the report before downloading it."
+        }), 400
+
+    return send_file(
+        BytesIO(html_report.encode("utf-8")),
+        mimetype="text/html",
+        as_attachment=True,
+        download_name="autods_report.html",
+    )
+
+
+@app.route("/api/report-preview", methods=["GET"])
+def preview_report():
+    html_report = store["report_html"]
+
+    if html_report is None:
+        return "Generate the report first.", 400
+
+    return app.response_class(
+        response=html_report,
+        status=200,
+        mimetype="text/html",
+    )
+
+
+@app.route("/api/anomalies", methods=["POST"])
+def run_anomaly_detection():
+    if store["df"] is None:
+        return jsonify({
+            "error": "Upload a dataset before detecting anomalies."
+        }), 400
+
+    try:
+        # Prefer cleaned data when available.
+        df = (
+            store["cleaned_df"]
+            if store["cleaned_df"] is not None
+            else store["df"]
+        )
+
+        result = detect_anomalies(df)
+
+        store["anomaly_results"] = result
+
+        return jsonify({
+            "message": "Anomaly detection completed.",
+            "rows_analyzed": result["rows_analyzed"],
+            "numeric_columns_used": result["numeric_columns_used"],
+            "anomalies_detected": result["anomalies_detected"],
+            "anomaly_percentage": result["anomaly_percentage"],
+            "anomalies": result["anomalies"],
+        })
+
+    except ValueError as error:
+        return jsonify({"error": str(error)}), 400
+
+    except Exception:
+        traceback.print_exc()
+        return jsonify({
+            "error": "Anomaly detection failed."
+        }), 500
 
 
 if __name__ == "__main__":

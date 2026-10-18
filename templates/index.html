@@ -12,34 +12,11 @@
 <body>
 <div class="app">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-title">AutoDS</div>
-        <div class="sidebar-subtitle">Automated Data Science</div>
-
-        <ul class="pipeline-steps" id="pipeline-steps">
-            <li class="pipeline-step active" data-step="0"><span class="marker"></span>Upload Dataset</li>
-            <li class="pipeline-step" data-step="1"><span class="marker"></span>Dataset Profile</li>
-            <li class="pipeline-step" data-step="2"><span class="marker"></span>Cleaning</li>
-            <li class="pipeline-step" data-step="3"><span class="marker"></span>Feature Engineering</li>
-            <li class="pipeline-step" data-step="4"><span class="marker"></span>Model Training</li>
-            <li class="pipeline-step" data-step="5"><span class="marker"></span>Hyperparameter Tuning</li>
-            <li class="pipeline-step" data-step="6"><span class="marker"></span>Model Comparison</li>
-            <li class="pipeline-step" data-step="7"><span class="marker"></span>Explainability</li>
-            <li class="pipeline-step" data-step="8"><span class="marker"></span>Report</li>
-        </ul>
-
-        <div class="sidebar-info hidden" id="sidebar-info">
-            <div><strong>File:</strong> <span id="sidebar-filename">--</span></div>
-            <div style="margin-top:4px"><strong>Shape:</strong> <span id="sidebar-shape">--</span></div>
-        </div>
-    </aside>
-
     <!-- Main Content -->
     <main class="main">
 
         <h1 class="page-title">AutoDS</h1>
-        <p class="page-desc">Upload a CSV to run automated profiling, cleaning, training, tuning, explainability, and report generation.</p>
+        <p class="page-desc">Upload a CSV to explore your data, clean missing values and duplicates, detect potential anomalies, and generate a downloadable report.</p>
 
         <!-- Upload Section -->
         <div class="section" id="section-upload">
@@ -47,7 +24,7 @@
 
             <div class="upload-area" id="upload-area">
                 <p class="upload-label">Drop a .csv file here or click to browse</p>
-                <p>Supports any tabular dataset with a target column</p>
+                <p>Supports CSV files containing tabular data</p>
                 <input type="file" id="file-input" accept=".csv">
             </div>
 

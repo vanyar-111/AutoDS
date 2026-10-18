@@ -37,3 +37,7 @@ images/*.jpg
 # Datasets (keep samples, ignore large uploads)
 datasets/*.csv
 !datasets/sample_*.csv
+
+# Exclude generated reports and PDFs at repository root
+*.pdf
+*.html
